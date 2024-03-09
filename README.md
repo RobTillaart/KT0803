@@ -233,6 +233,7 @@ This needs further investigation.
 
 - improve documentation
   - fill in gaps (TODO).
+  - pin layout schema
 - buy hardware
 - test and verify.
 
@@ -245,6 +246,8 @@ This needs further investigation.
   - mute device ?
   - set 'default' channel = param begin() ?
   - preset channel array in .h file (hardcoded)
+- SW pin (ON/OFF) as optional parameter in constructor.
+  - sw on/off, what is impact on settings?
 
 
 #### Could
@@ -258,7 +261,7 @@ This needs further investigation.
   - cache frequency.
   - only writing is needed. 
 - examples
-  - preset channels (EEPROM?)
+  - preset channels (optional EEPROM)
 - investigate tea5767 FM receiver
 - extend settings upon request, see table
 
@@ -266,23 +269,23 @@ This needs further investigation.
 |:---------:|:-------------:|:---------------:|:-------:|
 |  KT0803   |  PA_CTRL      |  13, bit 2      |  WARNING in datasheet
 |           |               |                 |  should it be added in API?
-|  KT0803K  |  MONO/STEREO  |  04, bit 6      |
-|  KT0803K  |  PGA_LSB      |  04, bit 4+5    |
-|  KT0803K  |  FDEV         |  04, bit 2+3    |
-|  KT0803K  |  BASS         |  04, bit 0+1    |
-|  KT0803K  |  PDPA         |  0B, bit 5      |
-|  KT0803K  |  PA_BIAS      |  0E, bit 1      |
-|  KT0803K  |  PW_OK        |  0F, bit 4      |
-|  KT0803K  |  SLNCID       |  0F, bit 2      |
-|  KT0803K  |  LMTLVL       |  10, bit 3+4    |
-|  KT0803K  |  PGAMOD       |  10, bit 0      |
-|  KT0803K  |  SLNCDIS      |  12, bit 7      |
-|  KT0803K  |  SLNCTHL      |  12, bit 4+5+6  |
-|  KT0803K  |  SLNCTHH      |  12, bit 1+2+3  |
-|  KT0803K  |  SW_MOD       |  12, bit 0      |
-|  KT0803K  |  SLNCTIME     |  14, bit 5+6+7  |
-|  KT0803K  |  SLNCCNTHIGH  |  14, bit 2+3+4  |
-|  KT0803K  |  SLNCCNTLOW   |  15, bit 0+1+2  |
+|  KT0803K  |  MONO/STEREO  |  04, bit 6      |  **idem**
+|  KT0803K  |  PGA_LSB      |  04, bit 4+5    |  gain fine tuning -> see PGA_MOD
+|  KT0803K  |  FDEV         |  04, bit 2+3    |  Frequency deviation adjustment
+|  KT0803K  |  BASS         |  04, bit 0+1    |  **Bass boost control**
+|  KT0803K  |  PDPA         |  0B, bit 5      |  Power Amplifier Power Down ?
+|  KT0803K  |  PA_BIAS      |  0E, bit 1      |  PA bias current enhancement.
+|  KT0803K  |  PW_OK  (RO)  |  0F, bit 4      |  **Power OK indicator**
+|  KT0803K  |  SLNCID (RO)  |  0F, bit 2      |  1 when Silence is detected
+|  KT0803K  |  LMTLVL       |  10, bit 3+4    |  Internal audio limiter level control
+|  KT0803K  |  PGAMOD       |  10, bit 0      |  PGA mode selection  (use PGA_LSB/ not)
+|  KT0803K  |  SLNCDIS      |  12, bit 7      |  Silence detection disable
+|  KT0803K  |  SLNCTHL      |  12, bit 4+5+6  |  Silence detection low threshold
+|  KT0803K  |  SLNCTHH      |  12, bit 1+2+3  |  Silence detection high threshold
+|  KT0803K  |  SW_MOD       |  12, bit 0      |  **Switching channel mode selection**
+|  KT0803K  |  SLNCTIME     |  14, bit 5+6+7  |  silence detection
+|  KT0803K  |  SLNCCNTHIGH  |  14, bit 2+3+4  |  silence detection
+|  KT0803K  |  SLNCCNTLOW   |  15, bit 0+1+2  |  silence detection
 
 
 
