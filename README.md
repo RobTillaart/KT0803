@@ -241,30 +241,54 @@ This needs further investigation.
 
 - check validity/range parameters
   - enums for parameters - readability?
-- investigate support 
-  - KT0803L, KT0803M (derived classes)
 - at startup
-  - mute device
-  - set 'dummy' channel
+  - mute device ?
+  - set 'default' channel = param begin() ?
   - preset channel array in .h file (hardcoded)
 
 
 #### Could
 
+- investigate support 
+  - KT0803L, KT0803M (derived classes)
 - investigate efficiency of register access.
-  - caching all (allowed) registers in **begin()** 0.1.1
+  - caching all (allowed) registers in **begin()**
     -  3 bytes for KT0803
     - 12 bytes for KT0803K
   - cache frequency.
   - only writing is needed. 
 - examples
-  - create frequency hopping device
   - preset channels (EEPROM?)
-  - send binary data over FM?
 - investigate tea5767 FM receiver
+- extend settings upon request, see table
+
+|  device   |  setting      |  register       |  Notes  |
+|:---------:|:-------------:|:---------------:|:-------:|
+|  KT0803   |  PA_CTRL      |  13, bit 2      |  WARNING in datasheet
+|           |               |                 |  should it be added in API?
+|  KT0803K  |  MONO/STEREO  |  04, bit 6      |
+|  KT0803K  |  PGA_LSB      |  04, bit 4+5    |
+|  KT0803K  |  FDEV         |  04, bit 2+3    |
+|  KT0803K  |  BASS         |  04, bit 0+1    |
+|  KT0803K  |  PDPA         |  0B, bit 5      |
+|  KT0803K  |  PA_BIAS      |  0E, bit 1      |
+|  KT0803K  |  PW_OK        |  0F, bit 4      |
+|  KT0803K  |  SLNCID       |  0F, bit 2      |
+|  KT0803K  |  LMTLVL       |  10, bit 3+4    |
+|  KT0803K  |  PGAMOD       |  10, bit 0      |
+|  KT0803K  |  SLNCDIS      |  12, bit 7      |
+|  KT0803K  |  SLNCTHL      |  12, bit 4+5+6  |
+|  KT0803K  |  SLNCTHH      |  12, bit 1+2+3  |
+|  KT0803K  |  SW_MOD       |  12, bit 0      |
+|  KT0803K  |  SLNCTIME     |  14, bit 5+6+7  |
+|  KT0803K  |  SLNCCNTHIGH  |  14, bit 2+3+4  |
+|  KT0803K  |  SLNCCNTLOW   |  15, bit 0+1+2  |
+
 
 
 #### Wont
+
+- send binary data over FM?
 
 
 ## Support
