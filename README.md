@@ -12,10 +12,10 @@
 
 # KT0803
 
-Arduino Library for KT0803 FM transmitter.
+Arduino Library for KT0803 and KT0803K FM transmitter.
 
 
-## Legal point of attention
+### Legal point of attention
 
 In different countries there are different laws with respect to using transmitting devices 
 and their range. 
@@ -33,6 +33,11 @@ The library is not tested yet with hardware. (see future).
 There are some newer, more capable, follow up devices like model K, L and M however these 
 are not supported (yet) although they probably will work as they seem backwards compatible.
 
+|  device   |  res  |
+|:---------:|:-------:
+|  KT0803   |  100
+|  KT0803K  |
+
 #### Warning
 
 The KT0803 is an 3.3 Volt device and cannot be connected directly to 5V MCU's.
@@ -44,7 +49,7 @@ The KT0803 is an 3.3 Volt device and cannot be connected directly to 5V MCU's.
 - https://www.hackster.io/hesam-moshiri/stereo-digital-fm-transmitter-circuit-arduino-code-2dbd8d
 - https://www.hackster.io/hesam-moshiri/full-digital-fm-receiver-with-arduino-and-tea5767-52be37
 - https://www.hackerstore.nl/Artikel/388
-
+- https://en.wikipedia.org/wiki/FM_broadcasting
 
 
 ## Interface
@@ -53,10 +58,11 @@ The KT0803 is an 3.3 Volt device and cannot be connected directly to 5V MCU's.
 #include "KT0803.h"
 ```
 
-`
 #### Constructor
 
-- **KT0803(uint8_t address, TwoWire \*wire = &Wire)** constructor, 
+- **KT0803(TwoWire \*wire = &Wire)** constructor, 
+optional Wire interface.
+- **KT0803K(TwoWire \*wire = &Wire)** constructor, 
 optional Wire interface.
 - **bool begin()** initializes the library.
 Furthermore it checks if the deviceAddress is available on the I2C bus.
@@ -92,8 +98,8 @@ Read datasheet.
 |  010  |  -8dB   |
 |  011  |  -12dB  |
 
-- **bool setRFGain(uint8_t rfgain);
-- **uint8_t getRFgain();
+- **bool setRFGain(uint8_t rfgain)**
+- **uint8_t getRFgain()**
 
 TODO RFGAIN table
 

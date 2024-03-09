@@ -1,5 +1,5 @@
 //
-//    FILE: KT0803_minimal.ino
+//    FILE: KT0803_setFrequency.ino
 //  AUTHOR: Rob Tillaart
 // PURPOSE: minimal demo
 //     URL: https://github.com/RobTillaart/KT0803
@@ -21,8 +21,12 @@ void setup()
   Wire.begin();
   
   FM_SEND.begin();
+  FM_SEND.setFrequency(105.75);
 
-  FM_SEND.setChannel(1000);  //  100.0 MHz
+  Serial.print("Freq: ");
+  Serial.println(FM_SEND.getFrequency());
+  Serial.print("Channel: ");
+  Serial.println(FM_SEND.getChannel());
 }
 
 void loop()
