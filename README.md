@@ -241,34 +241,29 @@ This needs further investigation.
 #### Should
 
 - check validity/range parameters
-  - enums for parameters - readability?
-- at startup
+- at startup = parameters begin()
   - mute device ?
-  - set 'default' channel = param begin() ?
-  - preset channel array in .h file (hardcoded)
+  - set 'default' frequency
 - SW pin (ON/OFF) as optional parameter in constructor.
-  - sw on/off, what is impact on settings?
+  - add functions for sw on/off, 
+  - what is impact on settings? 
+  - call begin () again? => default
+  - explain well doc.
 
 
 #### Could
 
 - investigate support 
   - KT0803L, KT0803M (derived classes)
-- investigate efficiency of register access.
-  - caching all (allowed) registers in **begin()**
-    -  3 bytes for KT0803
-    - 12 bytes for KT0803K
-  - cache frequency.
-  - only writing is needed. 
 - examples
   - preset channels (optional EEPROM)
-- investigate tea5767 FM receiver
-- extend settings upon request, see table
+- investigate tea5767 FM receiver (Out of scope for this lib).
+- extend settings upon request **bold** are interesting, see table
 
 |  device   |  setting      |  register       |  Notes  |
-|:---------:|:-------------:|:---------------:|:-------:|
-|  KT0803   |  PA_CTRL      |  13, bit 2      |  WARNING in datasheet
-|           |               |                 |  should it be added in API?
+|:---------:|:-------------:|:---------------:|:--------|
+|  KT0803   |  PA_CTRL      |  13, bit 2      |  **WARNING in datasheet**
+|           |               |                 |  Should it be added in API?
 |  KT0803K  |  MONO/STEREO  |  04, bit 6      |  **idem**
 |  KT0803K  |  PGA_LSB      |  04, bit 4+5    |  gain fine tuning -> see PGA_MOD
 |  KT0803K  |  FDEV         |  04, bit 2+3    |  Frequency deviation adjustment
@@ -277,21 +272,28 @@ This needs further investigation.
 |  KT0803K  |  PA_BIAS      |  0E, bit 1      |  PA bias current enhancement.
 |  KT0803K  |  PW_OK  (RO)  |  0F, bit 4      |  **Power OK indicator**
 |  KT0803K  |  SLNCID (RO)  |  0F, bit 2      |  1 when Silence is detected
-|  KT0803K  |  LMTLVL       |  10, bit 3+4    |  Internal audio limiter level control
+|  KT0803K  |  LMTLVL       |  10, bit 3+4    |  **Internal audio limiter level control**
 |  KT0803K  |  PGAMOD       |  10, bit 0      |  PGA mode selection  (use PGA_LSB/ not)
 |  KT0803K  |  SLNCDIS      |  12, bit 7      |  Silence detection disable
 |  KT0803K  |  SLNCTHL      |  12, bit 4+5+6  |  Silence detection low threshold
 |  KT0803K  |  SLNCTHH      |  12, bit 1+2+3  |  Silence detection high threshold
 |  KT0803K  |  SW_MOD       |  12, bit 0      |  **Switching channel mode selection**
-|  KT0803K  |  SLNCTIME     |  14, bit 5+6+7  |  silence detection
-|  KT0803K  |  SLNCCNTHIGH  |  14, bit 2+3+4  |  silence detection
-|  KT0803K  |  SLNCCNTLOW   |  15, bit 0+1+2  |  silence detection
+|  KT0803K  |  SLNCTIME     |  14, bit 5+6+7  |  silence detection time
+|  KT0803K  |  SLNCCNTHIGH  |  14, bit 2+3+4  |  silence detection count high
+|  KT0803K  |  SLNCCNTLOW   |  15, bit 0+1+2  |  silence detection count low
 
 
+#### Wont (for now)
 
-#### Wont
-
+- investigate efficiency of register access.
+  - caching all (allowed) registers in **begin()**
+    -  3 bytes for KT0803
+    - 12 bytes for KT0803K
+  - cache frequency.
+  - only writing is needed. 
 - send binary data over FM?
+- preset frequency array in .h file (hardcoded)
+- enums for parameters - readability?
 
 
 ## Support
