@@ -25,18 +25,58 @@ device like the KT0803 in your projects, either hobby, commercial or otherwise.
 
 ## Description
 
-This **experimental** library allows basic control of the KT0803 FM transmitter device.
-It is written as I wanted to understand the possibilities and the interface of the device.
+This **experimental** library allows basic control of the KT0803 and / or the KT0803K 
+FM transmitter device.
+It is primary written to understand the possibilities and the interface of the device.
 
-The library is not tested yet with hardware. (see future).
+The library is not tested by me with hardware yet. See future below.
 
-There are some newer, more capable, follow up devices like model K, L and M however these 
-are not supported (yet) although they probably will work as they seem backwards compatible.
+There are some newer, more capable, follow up devices like model K, L and M.
+From these only the KT0803K is supported since 0.2.0. 
+The others are not supported (yet) although they might work as they seem backwards compatible.
 
-|  device   |  res  |
-|:---------:|:-------:
-|  KT0803   |  100
-|  KT0803K  |
+
+#### Frequency range
+
+The frequency range stated on the front page of the datasheet ==> 70 MHz - 108 MHz.
+The frequency range stated in table 2 ==> 76 MHz - 108 MHz.
+So the datasheet is at least ambiguous on this point.
+Also keep in mind that the 
+
+
+#### Differences
+
+The KT0803K device has far more options, which are not implemented yet except one.
+The resolution or step-size of the frequency.
+
+|  device   |  step-size  |
+|:---------:|:-----------:|
+|  KT0803   |  100 KHz    |
+|  KT0803K  |   50 KHz    |
+
+According to the datasheet code for the KT0803 should work for the KT0803K.
+Code with the KT0803K class will probably not work on a KT0803 (not verified).
+
+
+#### Transmit frequency
+
+The transmit frequency can be set with **setFrequency(MHz)** or by **setChannel(channel)**.
+These channels differ per type device, some examples:
+
+|  FREQUENCY   |  KT0803  |  KT0803K  |  Notes  |
+|:------------:|:--------:|:---------:|:-------:|
+|   70.00 MHz  |    700   |   1400    |
+|   70.05 MHz  |    701   |   1401    |
+|   70.10 MHz  |    701   |   1402    |
+|   76.00 MHz  |    760   |   1520    |
+|   80.00 MHz  |    800   |   1600    |
+|   89.70 MHz  |    897   |   1794    |  default (see registers datasheet)
+|  100.00 MHz  |   1000   |   2000    |
+|  101.30 MHz  |   1013   |   2026    |
+|  105.70 MHz  |   1057   |   2114    |
+|  108.00 MHz  |   1080   |   2160    |
+
+
 
 #### Warning
 
@@ -72,72 +112,119 @@ Returns true if deviceAddress is found on the bus, false otherwise.
 
 #### Frequency
 
-- **bool setFrequency(float frequency)** converts the frequency to call **setChannel()**
-- **float getFrequency()** returns the current frequency, can be slightly different,
-due to rounding math. 
-The return value if derived from **getChannel()**
-- **bool setChannel(uint16_t channel)** sets the channel to broadcast on.
-- **uint16_t getChannel()** returns the set channel.
- 
- 
+- **bool setFrequency(float frequency)** converts the frequency in MHz to 
+call **setChannel(channel)**. The value of channel is rounded off depending 
+on the resolution of the device.
+- **float getFrequency()** returns the current frequency, can be slightly different
+from the set value due to rounding math mentioned above.
+The return value is derived from a call to **getChannel()**
+- **bool setChannel(uint16_t channel)** writes the channel to broadcast on to the device.
+This involves two or three writes to different device registers.
+- **uint16_t getChannel()** reads the selected channel from the device and 
+returns it.
+
+
 #### PGA, RFGain
 
-Read datasheet.
+Read Datasheet.
 
-- **bool setPGA(uint8_t pga)**
-- **uint8_t getPGA()**
+The KT0803K has a **PGA_LSB** (2 bits) setting, which allows setting the gain
+with single (1) dB steps. This is not yet implemented in the library.
 
-|  pga  |  gain   |
-|:-----:|:-------:|
+- **bool setPGA(uint8_t pga)** sets gain according to table below.
+Returns false if pga is out of range (0..7).
+- **uint8_t getPGA()** returns 0..7, default 0.
+
+
+|  PGA  |  gain   |  notes  |
+|:-----:|:-------:|:-------:|
 |  111  |  12dB   |
 |  110  |   8dB   |
 |  101  |   4dB   |
 |  100  |   0dB   |
-|  000  |   0dB   |
+|  000  |   0dB   |  default 
 |  001  |  -4dB   |
 |  010  |  -8dB   |
 |  011  |  -12dB  |
 
-- **bool setRFGain(uint8_t rfgain)**
-- **uint8_t getRFgain()**
 
-TODO RFGAIN table
+#### RFGain
+
+Read Datasheet.
+
+Note: the RFGain value (4 bits) is distributed over three registers.
+PA_BIAS (register 0x05) is only supported in the KT0803K device.
+It is not yet supported in the library.
+
+- **bool setRFGain(uint8_t rfgain)** sets rfgain according to table below.
+Returns false if rfgain is out of range (0..15).
+- **uint8_t getRFgain()** returns 0..15, default 15.
+
+
+|  RFGAIN  |   RFout      |  PA_BIAS = 1 |  notes  |
+|:--------:|:------------:|:------------:|:-------:|
+|   0000   |   95.5 dBuV  |      -       |
+|   0001   |   96.5 dBuV  |      -       |
+|   0010   |   97.5 dBuV  |      -       |
+|   0011   |   98.2 dBuV  |      -       |
+|   0100   |   98.9 dBuV  |      -       |
+|   0101   |  100.0 dBuV  |      -       |
+|   0110   |  101.5 dBuV  |      -       |
+|   0111   |  102.8 dBuV  |      -       |
+|   1000   |  105.1 dBuV  |  107.2 dBuV  |
+|   1001   |  105.6 dBuV  |  108.0 dBuV  |
+|   1010   |  106.2 dBuV  |  108.7 dBuV  |
+|   1011   |  106.5 dBuV  |  109.5 dBuV  |
+|   1100   |  107.0 dBuV  |  110.3 dBuV  |
+|   1101   |  107.4 dBuV  |  111.0 dBuV  |
+|   1110   |  107.7 dBuV  |  111.7 dBuV  |
+|   1111   |  108.0 dBuV  |  112.5 dBuV  |  default
 
 
 #### Region selection
 
-Read datasheet.
+Read datasheet for details.
+
+Note that not all frequencies are allowed in all regions / countries!
 
 The first four are convenience wrappers for **setPHTCNST()**
+If some region is missing please let me know the details and I can add 
+a wrapper for it.
 
 - **void setEurope()**
 - **void setAustralia()**
 - **void setUSA()**
 - **void setJapan()**
-- **bool setPHTCNST(bool on)**
-- **bool getPHTCNST()**
+- **bool setPHTCNST(bool on)** See table below.
+- **bool getPHTCNST()** returns set value.
 
-If some region is missing please let me know and I can add it.
+|  PHTCNST  |  time   |  Region  |
+|:---------:|:-------:|:--------:|
+|    0      |  75 μs  |  USA, Japan, (default)
+|    1      |  50 μs  |  Europe, Australia
 
 
 #### PilotToneAdjust
 
 Read datasheet.
 
-- **bool setPilotToneAdjust(uint8_t mode)**  //  HIGH = 1 LOW = 0
+- **bool setPilotToneAdjust(uint8_t mode)**  HIGH = 1 LOW = 0
 - **uint8_t getPilotToneAdjust()**
 
 
 #### Mute
 
-- **bool setMute(bool mute)** enables or disables the transmitting.
-- **bool getMute()** returns the current state. 
+Default not muted.
+
+- **bool setMute(bool mute)** enables or disables the transmitting
+by muting the signal.
+- **bool getMute()** returns the current state of muting.
 
 
 ## Derived classes
 
-The KT0803K/L/M devices might work as they seem backwards compatible.
-
+The KT0803L and KT0803M devices might work as they seem backwards compatible.
+This needs further investigation. 
 
 
 ## Future
@@ -149,12 +236,13 @@ The KT0803K/L/M devices might work as they seem backwards compatible.
 - buy hardware
 - test and verify.
 
+
 #### Should
 
 - check validity/range parameters
   - enums for parameters - readability?
 - investigate support 
-  - KT0803K, KT0803L, KT0803M (derived classes)
+  - KT0803L, KT0803M (derived classes)
 - at startup
   - mute device
   - set 'dummy' channel
@@ -169,10 +257,9 @@ The KT0803K/L/M devices might work as they seem backwards compatible.
     - 12 bytes for KT0803K
   - cache frequency.
   - only writing is needed. 
-- need hardware to test.
 - examples
   - create frequency hopping device
-  - preset channels (eeprom?)
+  - preset channels (EEPROM?)
   - send binary data over FM?
 - investigate tea5767 FM receiver
 

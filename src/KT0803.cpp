@@ -70,8 +70,13 @@ uint16_t KT0803::getChannel()
 }
 
 
+///////////////////////////////////////////////////////////
+//
+//  GAIN
+//
 bool KT0803::setPGA(uint8_t pga)
 {
+  if (pga > 7) return false;
   uint8_t data = readData(0x01);
   data &= 0xC7;   //  keep other bits
   data |= (pga << 3);
@@ -79,10 +84,6 @@ bool KT0803::setPGA(uint8_t pga)
 }
 
 
-///////////////////////////////////////////////////////////
-//
-//  GAIN
-//
 uint8_t KT0803::getPGA()
 {
   return (readData(0x01) >> 3) & 0x07;
@@ -91,6 +92,7 @@ uint8_t KT0803::getPGA()
 
 bool KT0803::setRFGain(uint8_t rfgain)
 {
+  if (rfgain > 15) return false;
   //  bits 0 and 1
   uint8_t data = readData(0x01) & 0x3F;
   data |= (rfgain & 0x03) << 6;
@@ -214,6 +216,11 @@ KT0803K::KT0803K(TwoWire * wire) : KT0803(wire)
 {
 }
 
+
+///////////////////////////////////////////////////////////
+//
+//  FREQUENCY
+//
 bool KT0803K::setFrequency(float frequency)
 {
   //  steps 50 KHz (in MHz)
@@ -254,6 +261,12 @@ uint16_t KT0803K::getChannel()
   channel |= (readData(0x02) >> 0x07);
   return channel;
 }
+
+
+///////////////////////////////////////////////////////////
+//
+//  OTHER
+//
 
 
 //  -- END OF FILE --

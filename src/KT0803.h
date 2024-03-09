@@ -90,6 +90,8 @@ public:
   float    getFrequency();
   bool     setChannel(uint16_t channel);
   uint16_t getChannel();
+
+  //  OTHER  TODO
 };
 
 
