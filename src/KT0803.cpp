@@ -36,27 +36,33 @@ bool KT0803::isConnected()
 //
 //  FREQUENCY
 //
-bool KT0803::setFrequency(float frequency)
+bool KT0803::setFrequency(float MHz)
 {
-  //  steps 100 KHz (in MHz)
-  return setChannel(round(frequency * 10));
+  if ((MHz < 70) || (MHz > 108)) return false;
+  //  steps 50 KHz
+  return setChannel(round(MHz * 20));  
 }
 
 
+//  MHz
 float KT0803::getFrequency()
 {
-  //  steps 100 KHz (in MHz)
-  return getChannel() * 0.1;
+  return getChannel() * 0.05;
 }
 
 
+//  steps of 50 KHz.
 bool KT0803::setChannel(uint16_t channel)
 {
-  if (writeData(0x00, channel & 0xFF) == false) return false;
-
-  uint8_t data = readData(0x01);
-  data &= 0xF8;   //  keep other bits
-  data |= (channel >> 8) & 0x07;
+  if ((channel < 1400) || (channel > 2160)) return false;
+  //  need to split over 3 registers
+  //  register 2 part skipped (always 0) for KT0803
+  uint16_t ch = channel >> 1;
+  //  register 0
+  if (writeData(0x00, ch & 0xFF) == false) return false;
+  //  register 1
+  data = readData(0x01) & 0xF8;  //  keep other bits
+  data |= ((ch >> 8) & 0x07);
   return writeData(0x01, data);
 }
 
@@ -142,6 +148,7 @@ bool KT0803::getPHTCNST()
 
 bool KT0803::setPilotToneAdjust(uint8_t mode)
 {
+  if (mode > 1) return false;
   uint8_t data = readData(0x02);
   //  is the bit already OK
   if ((mode == 1) && (data & 0x04) == 0x04) return true;
@@ -217,24 +224,9 @@ KT0803K::KT0803K(TwoWire * wire) : KT0803(wire)
 }
 
 
-///////////////////////////////////////////////////////////
-//
-//  FREQUENCY
-//
-bool KT0803K::setFrequency(float frequency)
-{
-  //  steps 50 KHz (in MHz)
-  return setChannel(round(frequency * 20));  
-}
-
-float KT0803K::getFrequency()
-{
-  //  steps 50 KHz in MHz)
-  return getChannel() * 0.05;  
-}
-
 bool KT0803K::setChannel(uint16_t channel)
 {
+  if ((channel < 1400) || (channel > 2160)) return false;
   //  need to split over 3 registers
   uint16_t ch = channel;
   //  register 2

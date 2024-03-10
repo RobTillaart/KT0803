@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 - Fix #2 frequency to channel formula
 - add derived **class KT0803K**
 - add examples
+- add parameter checks functions.
 - update documentation
 - update GitHub actions
 - minor edits

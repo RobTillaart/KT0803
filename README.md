@@ -49,33 +49,35 @@ Also keep in mind that the
 The KT0803K device has far more options, which are not implemented yet except one.
 The resolution or step-size of the frequency.
 
-|  device   |  step-size  |
-|:---------:|:-----------:|
-|  KT0803   |  100 KHz    |
+|  device   |  step-size  |  Notes  |
+|:---------:|:-----------:|:--------|
+|  KT0803   |  100 KHz    |  in code the math is done with 50 KHz
 |  KT0803K  |   50 KHz    |
 
+Backwards compatible.
 According to the datasheet code for the KT0803 should work for the KT0803K.
-Code with the KT0803K class will probably not work on a KT0803 (not verified).
+Code with the KT0803K class will probably not work on a KT0803.
 
 
 #### Transmit frequency
 
 The transmit frequency can be set with **setFrequency(MHz)** or by **setChannel(channel)**.
-These channels differ per type device, some examples:
+Note that the channel and frequency math is aligned in this library. 
 
-|  FREQUENCY   |  KT0803  |  KT0803K  |  Notes  |
-|:------------:|:--------:|:---------:|:-------:|
-|   70.00 MHz  |    700   |   1400    |
-|   70.05 MHz  |    701   |   1401    |
-|   70.10 MHz  |    701   |   1402    |
-|   76.00 MHz  |    760   |   1520    |
-|   80.00 MHz  |    800   |   1600    |
-|   89.70 MHz  |    897   |   1794    |  default (see registers datasheet)
-|  100.00 MHz  |   1000   |   2000    |
-|  101.30 MHz  |   1013   |   2026    |
-|  105.70 MHz  |   1057   |   2114    |
-|  108.00 MHz  |   1080   |   2160    |
+Some examples:
 
+|  FREQUENCY   |  CHANNEL  |  Notes  |
+|:------------:|:---------:|:-------:|
+|   70.00 MHz  |   1400    |  channel = freq (Mhz) \* 20.
+|   70.05 MHz  |   1401    |
+|   70.10 MHz  |   1402    |
+|   76.00 MHz  |   1520    |
+|   80.00 MHz  |   1600    |
+|   89.70 MHz  |   1794    |  default (see registers datasheet)
+|  100.00 MHz  |   2000    |
+|  101.30 MHz  |   2026    |
+|  105.70 MHz  |   2114    |
+|  108.00 MHz  |   2160    |
 
 
 #### Warning
@@ -112,10 +114,11 @@ Returns true if deviceAddress is found on the bus, false otherwise.
 
 #### Frequency
 
-- **bool setFrequency(float frequency)** converts the frequency in MHz to 
+- **bool setFrequency(float MHz)** converts the frequency in MHz to 
 call **setChannel(channel)**. The value of channel is rounded off depending 
 on the resolution of the device.
-- **float getFrequency()** returns the current frequency, can be slightly different
+Returns false if MHz is out of range or **setChannel()** fails.
+- **float getFrequency()** returns the current frequency in MHz, can be slightly different
 from the set value due to rounding math mentioned above.
 The return value is derived from a call to **getChannel()**
 - **bool setChannel(uint16_t channel)** writes the channel to broadcast on to the device.
@@ -226,6 +229,10 @@ by muting the signal.
 The KT0803L and KT0803M devices might work as they seem backwards compatible.
 This needs further investigation. 
 
+M looks almost identical to K (no new registers)
+
+L has more registers / functionality. 
+
 
 ## Future
 
@@ -240,7 +247,6 @@ This needs further investigation.
 
 #### Should
 
-- check validity/range parameters
 - at startup = parameters begin()
   - mute device ?
   - set 'default' frequency
@@ -253,8 +259,7 @@ This needs further investigation.
 
 #### Could
 
-- investigate support 
-  - KT0803L, KT0803M (derived classes)
+- derived class KT0803M (== K)
 - examples
   - preset channels (optional EEPROM)
 - investigate tea5767 FM receiver (Out of scope for this lib).
@@ -285,6 +290,7 @@ This needs further investigation.
 
 #### Wont (for now)
 
+- implement KT0803L
 - investigate efficiency of register access.
   - caching all (allowed) registers in **begin()**
     -  3 bytes for KT0803

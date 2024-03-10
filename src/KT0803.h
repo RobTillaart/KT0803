@@ -24,7 +24,7 @@ public:
 
 
   //  FM FREQUENCY
-  bool     setFrequency(float frequency);
+  bool     setFrequency(float MHz);
   float    getFrequency();
   bool     setChannel(uint16_t channel);
   uint16_t getChannel();
@@ -42,7 +42,7 @@ public:
   // 011: -12dB
   uint8_t getPGA();
 
-  bool setRFGain(uint8_t rfgain);
+  bool setRFGain(uint8_t rfgain);  //  0-15
   uint8_t getRFgain();
 
 
@@ -85,9 +85,7 @@ class KT0803K : public KT0803
 public:
   KT0803K(TwoWire * wire = &Wire);
 
-  //  FM FREQUENCY
-  bool     setFrequency(float frequency);
-  float    getFrequency();
+  //  CHANNEL
   bool     setChannel(uint16_t channel);
   uint16_t getChannel();
 
