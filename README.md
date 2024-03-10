@@ -129,8 +129,9 @@ Some examples:
 optional Wire interface.
 - **KT0803K(TwoWire \*wire = &Wire)** constructor, 
 optional Wire interface.
-- **bool begin()** initializes the library.
+- **bool begin(float freq = 90.0, bool mute = true)** initializes the library.
 Furthermore it checks if the deviceAddress is available on the I2C bus.
+Default it sets the frequency to 90 MHz and mutes the signal.
 Returns true if deviceAddress is found on the bus, false otherwise.
 - **bool isConnected()** test to see if deviceAddress is found on the I2C-bus.
 

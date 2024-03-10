@@ -19,7 +19,7 @@ KT0803::KT0803(TwoWire * wire)
 }
 
 
-bool KT0803::begin(float freq = 90.0, bool mute = true)
+bool KT0803::begin(float freq, bool mute)
 {
   if (! isConnected()) return false;
   if (! setMute(mute)) return false;
