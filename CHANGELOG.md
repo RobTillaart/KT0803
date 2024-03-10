@@ -11,6 +11,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 - add derived **class KT0803K**
 - add examples
 - add parameter checks functions.
+- add default frequency + mute to **begin()**
 - update documentation
 - update GitHub actions
 - minor edits

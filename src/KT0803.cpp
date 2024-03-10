@@ -19,9 +19,11 @@ KT0803::KT0803(TwoWire * wire)
 }
 
 
-bool KT0803::begin()
+bool KT0803::begin(float freq = 90.0, bool mute = true)
 {
-  return isConnected();
+  if (! isConnected()) return false;
+  if (! setMute(mute)) return false;
+  return setFrequency(freq);
 }
 
 
@@ -111,7 +113,7 @@ bool KT0803::setRFGain(uint8_t rfgain)
   data = readData(0x02) & 0xBF; 
   data |= (rfgain & 0x08) << 3;
   writeData(0x02, data);
-  return true;  //  TODO add error handling.
+  return true;
 }
 
 

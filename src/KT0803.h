@@ -19,7 +19,7 @@ class KT0803
 public:
   KT0803(TwoWire * wire = &Wire);
 
-  bool begin();
+  bool begin(float freq = 90.0, bool mute = true);
   bool isConnected();
 
 
@@ -88,8 +88,6 @@ public:
   //  CHANNEL
   bool     setChannel(uint16_t channel);
   uint16_t getChannel();
-
-  //  OTHER  TODO
 };
 
 

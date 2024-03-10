@@ -36,6 +36,31 @@ From these only the KT0803K is supported since 0.2.0.
 The others are not supported (yet) although they might work as they seem backwards compatible.
 
 
+#### Hardware
+
+
+Read datasheet for details.
+
+**Warning**
+The KT0803 is an 3.3 Volt device and cannot be connected directly to 5V MCU's.
+
+
+```
+                   +----------+
+                   |  KT0803  |
+             GND --|  1   16  |-- PA_OUT  RF analog output
+   Crystal    XI --|  2   15  |-- GND
+   Crystal    XO --|  3   14  |-- SCL     I2C Clock
+   3.3V    IOVDD --|  4   13  |-- SCA     I2C Data
+             GND --|  5   12  |-- GND
+   in left   INL --|  6   11  |-- GND
+   in right  INR --|  7   10  |-- RSTB    Reset
+   enable     SW --|  8    9  |-- GND
+                   |          |
+                   +----------+
+```
+
+
 #### Frequency range
 
 The frequency range stated on the front page of the datasheet ==> 70 MHz - 108 MHz.
@@ -62,14 +87,17 @@ Code with the KT0803K class will probably not work on a KT0803.
 #### Transmit frequency
 
 The transmit frequency can be set with **setFrequency(MHz)** or by **setChannel(channel)**.
-Note that the channel and frequency math is aligned in this library. 
+Note that the channel and frequency math of the KT0803 and the KT0803K is aligned 
+in this library. This allows exchange of channel data between device types.
+
+Note that the KT0803 will internally round to use 100 KHz steps.
 
 Some examples:
 
-|  FREQUENCY   |  CHANNEL  |  Notes  |
+|  Frequency   |  Channel  |  Notes  |
 |:------------:|:---------:|:-------:|
-|   70.00 MHz  |   1400    |  channel = freq (Mhz) \* 20.
-|   70.05 MHz  |   1401    |
+|   70.00 MHz  |   1400    |  channel = freq (Mhz) \* 20
+|   70.05 MHz  |   1401    |  freq = channel \* 0.05
 |   70.10 MHz  |   1402    |
 |   76.00 MHz  |   1520    |
 |   80.00 MHz  |   1600    |
@@ -78,11 +106,6 @@ Some examples:
 |  101.30 MHz  |   2026    |
 |  105.70 MHz  |   2114    |
 |  108.00 MHz  |   2160    |
-
-
-#### Warning
-
-The KT0803 is an 3.3 Volt device and cannot be connected directly to 5V MCU's.
 
 
 #### Related
@@ -224,14 +247,25 @@ by muting the signal.
 - **bool getMute()** returns the current state of muting.
 
 
+## Preference channels
+
+The device and library has no means to store preferences (channel) persistently.
+This can be implemented by the user in EEPROM or another persistent medium.
+
+It could be implemented as a separate class that holds an array of channels and
+descriptions 
+
+
 ## Derived classes
 
-The KT0803L and KT0803M devices might work as they seem backwards compatible.
-This needs further investigation. 
+Since 0.2.0 the KT0803K class is created, although minimally implemented.
 
-M looks almost identical to K (no new registers)
+The KT0803L might work as it seems backwards compatible. It has far more
+registers in use than the KT0803/K.
+At the moment there is no intention to implement this KT0803L version.
 
-L has more registers / functionality. 
+The KT0803M looks almost identical to the KT0803K (no new registers), so
+a derived class is straightforward. 
 
 
 ## Future
@@ -239,30 +273,26 @@ L has more registers / functionality.
 #### Must
 
 - improve documentation
-  - fill in gaps (TODO).
-  - pin layout schema
 - buy hardware
 - test and verify.
 
 
 #### Should
 
-- at startup = parameters begin()
-  - mute device ?
-  - set 'default' frequency
-- SW pin (ON/OFF) as optional parameter in constructor.
+
+#### Could
+
+- RESET pin as optional parameter in constructor?
+- SW pin (ON/OFF) as optional parameter in constructor?
   - add functions for sw on/off, 
   - what is impact on settings? 
   - call begin () again? => default
   - explain well doc.
-
-
-#### Could
-
 - derived class KT0803M (== K)
+- improve error handling
 - examples
   - preset channels (optional EEPROM)
-- investigate tea5767 FM receiver (Out of scope for this lib).
+- unit tests possible?
 - extend settings upon request **bold** are interesting, see table
 
 |  device   |  setting      |  register       |  Notes  |
@@ -290,6 +320,7 @@ L has more registers / functionality.
 
 #### Wont (for now)
 
+- investigate tea5767 FM receiver (Out of scope for this lib).
 - implement KT0803L
 - investigate efficiency of register access.
   - caching all (allowed) registers in **begin()**
