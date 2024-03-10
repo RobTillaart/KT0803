@@ -63,7 +63,7 @@ bool KT0803::setChannel(uint16_t channel)
   //  register 0
   if (writeData(0x00, ch & 0xFF) == false) return false;
   //  register 1
-  data = readData(0x01) & 0xF8;  //  keep other bits
+  uint8_t data = readData(0x01) & 0xF8;  //  keep other bits
   data |= ((ch >> 8) & 0x07);
   return writeData(0x01, data);
 }
