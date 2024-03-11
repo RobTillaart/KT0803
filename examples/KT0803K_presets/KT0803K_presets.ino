@@ -13,11 +13,13 @@
 KT0803K FM_SEND;
 
 //  hardcoded presets adjust to your need.
+//  note: presets by channel would take half the memory
 float preset[10] =
 {
   88.6, 91.3, 92.2, 96.0, 97.3,
   98.8, 100.1, 100.3, 105.4, 107.6
 };
+
 
 void setup()
 {
