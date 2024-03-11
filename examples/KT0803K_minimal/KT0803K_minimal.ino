@@ -21,8 +21,8 @@ void setup()
   Wire.begin();
 
   FM_SEND.begin();
-
   FM_SEND.setChannel(2000);  //  100.0 MHz
+  FM_SEND.setMute(false);
 }
 
 void loop()

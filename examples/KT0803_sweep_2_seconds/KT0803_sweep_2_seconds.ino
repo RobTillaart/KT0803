@@ -20,6 +20,7 @@ void setup()
 
   Wire.begin();
   FM_SEND.begin();
+  FM_SEND.setMute(false);
 }
 
 void loop()

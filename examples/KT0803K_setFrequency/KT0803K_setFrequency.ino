@@ -22,6 +22,7 @@ void setup()
   
   FM_SEND.begin();
   FM_SEND.setFrequency(105.75);
+  FM_SEND.setMute(false);
 
   Serial.print("Freq: ");
   Serial.println(FM_SEND.getFrequency());
