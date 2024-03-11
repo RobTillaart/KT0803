@@ -131,7 +131,7 @@ optional Wire interface.
 optional Wire interface.
 - **bool begin(float freq = 90.0, bool mute = true)** initializes the library.
 Furthermore it checks if the deviceAddress is available on the I2C bus.
-Default it sets the frequency to 90 MHz and mutes the signal.
+Default it sets the frequency to 90 MHz and **mutes the signal**.
 Returns true if deviceAddress is found on the bus, false otherwise.
 - **bool isConnected()** test to see if deviceAddress is found on the I2C-bus.
 
