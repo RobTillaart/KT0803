@@ -151,7 +151,7 @@ This involves two or three writes to different device registers.
 returns it.
 
 
-#### PGA, RFGain
+#### PGA
 
 Read Datasheet.
 
@@ -241,7 +241,8 @@ Read datasheet.
 
 #### Mute
 
-Default not muted.
+Default the device is not muted, but **begin()** will default mute it.
+See interface section above.
 
 - **bool setMute(bool mute)** enables or disables the transmitting
 by muting the signal.
@@ -250,11 +251,12 @@ by muting the signal.
 
 ## Preference channels
 
-The device and library has no means to store preferences (channel) persistently.
+The device and library do not implement the persistant store of user 
+selectable preferences (frequencies or channels).
 This can be implemented by the user in EEPROM or another persistent medium.
 
-It could be implemented as a separate class that holds an array of channels and
-descriptions 
+Think of a class that holds an array of channels and optional descriptions.
+A minimal hardcoded preset sketch is in the examples.
 
 
 ## Derived classes
@@ -266,7 +268,7 @@ registers in use than the KT0803/K.
 At the moment there is no intention to implement this KT0803L version.
 
 The KT0803M looks almost identical to the KT0803K (no new registers), so
-a derived class is straightforward. 
+a derived class is straightforward.
 
 
 ## Future
@@ -289,10 +291,8 @@ a derived class is straightforward.
   - what is impact on settings? 
   - call begin () again? => default
   - explain well doc.
-- derived class KT0803M (== K)
+- derived class KT0803M (== K check)
 - improve error handling
-- examples
-  - preset channels (optional EEPROM)
 - unit tests possible?
 - extend settings upon request **bold** are interesting, see table
 
