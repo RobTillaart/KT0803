@@ -210,7 +210,7 @@ int KT0803::readData(uint8_t reg)
 {
   _wire->beginTransmission(_address);
   _wire->write(reg);
-  _wire->endTransmission();
+  _wire->endTransmission(false);  //  explicit no STOP  fig 3 page 4
 
   if (_wire->requestFrom(_address, (uint8_t) 1) == 1)
   {
@@ -263,9 +263,9 @@ uint16_t KT0803K::getChannel()
 }
 
 
-////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////
 //
-//  NOT IN KT0803
+//  KT0803K SPECIFIC
 //
 bool KT0803K::setMono()
 {
