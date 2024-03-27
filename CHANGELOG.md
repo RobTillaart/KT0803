@@ -9,7 +9,17 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 ## [0.2.1] - 2024-03-27
 - fix #5, getChannel()
 - fix KT0803K setChannel()
+- add several KT0803K specific functions (experimental)
+  - bool setMono()
+  - bool setStereo()
+  - bool isStereo()
+  - bool setBass(uint8_t bass)
+  - uint8_t getBass()
+  - bool powerOK()
+  - bool silenceDetected()
 - update GitHub actions
+- update readme.md
+- minor edits
 
 
 ## [0.2.0] - 2024-03-09

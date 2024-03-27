@@ -31,13 +31,13 @@ It is primary written to understand the possibilities and the interface of the d
 
 The library is not tested by me with hardware yet. See future below.
 
-There are some newer, more capable, follow up devices like model K, L and M.
+There are newer, more capable, follow up devices like model K, L and M.
 From these only the KT0803K is supported since 0.2.0. 
-The others are not supported (yet) although they might work as they seem backwards compatible.
+The L and the M version are not supported yet (first get K done).
+First investigations indicate M == K and L >> K, and thus far they seem backwards compatible.
 
 
 #### Hardware
-
 
 Read datasheet for details.
 
@@ -66,17 +66,19 @@ The KT0803 is an 3.3 Volt device and cannot be connected directly to 5V MCU's.
 The frequency range stated on the front page of the datasheet ==> 70 MHz - 108 MHz.
 The frequency range stated in table 2 ==> 76 MHz - 108 MHz.
 So the datasheet is at least ambiguous on this point.
-Also keep in mind that the 
+
+Keep in mind that the frequency range allowed differs per country.
+The library does not provide this filtering, explicit responsibility of the user.
 
 
 #### Differences
 
-The KT0803K device has far more options, which are not implemented yet except one.
-The resolution or step-size of the frequency.
+The KT0803K device has far more options, which are not all implemented.
+There is one important, the resolution or step-size of the frequency.
 
 |  device   |  step-size  |  Notes  |
 |:---------:|:-----------:|:--------|
-|  KT0803   |  100 KHz    |  in code the math is done with 50 KHz
+|  KT0803   |  100 KHz    |  in code all math is done with 50 KHz
 |  KT0803K  |   50 KHz    |
 
 Backwards compatible.
@@ -117,7 +119,7 @@ Some examples:
 - https://en.wikipedia.org/wiki/FM_broadcasting
 
 
-## Interface
+## Interface KT0803
 
 ```cpp
 #include "KT0803.h"
@@ -271,6 +273,27 @@ The KT0803M looks almost identical to the KT0803K (no new registers), so
 a derived class is straightforward.
 
 
+## Interface KT0803K
+
+Added in 0.2.1 (not tested), check datasheet.
+
+#### Mono Stereo
+
+- **bool setMono()** idem
+- **bool setStereo()** idem
+- **bool isStereo()** idem
+
+#### Bass
+
+- **bool setBass(uint8_t bass);  //  0..3 = 0, 5, 11, 17 dB
+- **uint8_t getBass()** idem
+
+#### Misc
+
+- **bool powerOK()**
+- **bool silenceDetected()**
+
+
 ## Future
 
 #### Must
@@ -282,6 +305,8 @@ a derived class is straightforward.
 
 #### Should
 
+- add examples for KT0803K specific functions.
+
 
 #### Could
 
@@ -291,7 +316,8 @@ a derived class is straightforward.
   - what is impact on settings? 
   - call begin () again? => default
   - explain well doc.
-- derived class KT0803M (== K check)
+- derived class KT0803M  == KT0803K
+- derived class KT0803L  >> KT0803K (compatible)
 - improve error handling
 - unit tests possible?
 - extend settings upon request **bold** are interesting, see table
@@ -300,14 +326,10 @@ a derived class is straightforward.
 |:---------:|:-------------:|:---------------:|:--------|
 |  KT0803   |  PA_CTRL      |  13, bit 2      |  **WARNING in datasheet**
 |           |               |                 |  Should it be added in API?
-|  KT0803K  |  MONO/STEREO  |  04, bit 6      |  **idem**
 |  KT0803K  |  PGA_LSB      |  04, bit 4+5    |  gain fine tuning -> see PGA_MOD
 |  KT0803K  |  FDEV         |  04, bit 2+3    |  Frequency deviation adjustment
-|  KT0803K  |  BASS         |  04, bit 0+1    |  **Bass boost control**
 |  KT0803K  |  PDPA         |  0B, bit 5      |  Power Amplifier Power Down ?
 |  KT0803K  |  PA_BIAS      |  0E, bit 1      |  PA bias current enhancement.
-|  KT0803K  |  PW_OK  (RO)  |  0F, bit 4      |  **Power OK indicator**
-|  KT0803K  |  SLNCID (RO)  |  0F, bit 2      |  1 when Silence is detected
 |  KT0803K  |  LMTLVL       |  10, bit 3+4    |  **Internal audio limiter level control**
 |  KT0803K  |  PGAMOD       |  10, bit 0      |  PGA mode selection  (use PGA_LSB/ not)
 |  KT0803K  |  SLNCDIS      |  12, bit 7      |  Silence detection disable

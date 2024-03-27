@@ -251,6 +251,7 @@ bool KT0803K::setChannel(uint16_t channel)
   return writeData(0x01, register1);
 }
 
+
 uint16_t KT0803K::getChannel()
 {
   uint16_t channel = readData(0x01) & 0x07;
@@ -260,6 +261,72 @@ uint16_t KT0803K::getChannel()
   channel |= (readData(0x02) >> 7);
   return channel;
 }
+
+
+////////////////////////////////////////////////////
+//
+//  NOT IN KT0803
+//
+bool KT0803K::setMono()
+{
+  uint8_t data = readData(0x04);
+  if (data & (1 << 6))
+  {
+    data &= ~(1 << 6);
+    return writeData(0x04, data);
+  }
+  return true;
+}
+
+
+bool KT0803K::setStereo()
+{
+  uint8_t data = readData(0x04);
+  if ((data & (1 << 6)) == 0)
+  {
+    data |= (1 << 6);
+    return writeData(0x04, data);
+  }
+  return true;
+}
+
+bool KT0803K::isStereo()
+{
+  uint8_t data = readData(0x04);
+  return (data & (1 << 6));
+}
+
+
+bool KT0803K::setBass(uint8_t bass)  //  0..3 = 0, 5, 11, 17 dB
+{
+  if (bass > 3) return false;
+  uint8_t data = readData(0x04);
+  data &= ~0x03;  //  mask off bits
+  data |= bass;
+  return writeData(0x04, data);
+}
+
+
+uint8_t KT0803K::getBass()
+{
+  uint8_t data = readData(0x04);
+  return data & 0x03;
+}
+
+
+bool KT0803K::powerOK()
+{
+  uint8_t data = readData(0x0F);
+  return (data & (1 << 4)) > 0;
+}
+
+
+bool KT0803K::silenceDetected()
+{
+  uint8_t data = readData(0x0F);
+  return (data & (1 << 2)) > 0;
+}
+
 
 
 ///////////////////////////////////////////////////////////
