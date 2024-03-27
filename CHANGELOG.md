@@ -6,9 +6,10 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
 
-## [0.2.1] - 2024-03-27
+## [0.3.0] - 2024-03-27
 - fix #5, getChannel()
 - fix KT0803K setChannel()
+- fix readData()
 - add several KT0803K specific functions (experimental)
   - bool setMono()
   - bool setStereo()
@@ -21,6 +22,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 - update readme.md
 - minor edits
 
+----
 
 ## [0.2.0] - 2024-03-09
 - Fix #2 frequency to channel formula

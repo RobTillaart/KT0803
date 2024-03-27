@@ -275,7 +275,7 @@ a derived class is straightforward.
 
 ## Interface KT0803K
 
-Added in 0.2.1 (not tested), check datasheet.
+Added in 0.3.0 (not tested), check datasheet.
 
 #### Mono Stereo
 
