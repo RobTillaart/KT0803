@@ -8,6 +8,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [0.2.1] - 2024-03-27
 - fix #5, getChannel()
+- fix KT0803K setChannel()
 - update GitHub actions
 
 
