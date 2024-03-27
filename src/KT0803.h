@@ -89,7 +89,7 @@ public:
   bool     setChannel(uint16_t channel);
   uint16_t getChannel();
 
-  //  NOT IN KT0803
+  //  KT0803K SPECIFIC
   bool     setMono();
   bool     setStereo();
   bool     isStereo();
