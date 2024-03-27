@@ -6,6 +6,11 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
 
+## [0.2.1] - 2024-03-27
+- fix #5, getChannel()
+- update GitHub actions
+
+
 ## [0.2.0] - 2024-03-09
 - Fix #2 frequency to channel formula
 - add derived **class KT0803K**
@@ -15,7 +20,6 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 - update documentation
 - update GitHub actions
 - minor edits
-
 
 ----
 

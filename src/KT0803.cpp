@@ -1,7 +1,7 @@
 //
 //    FILE: KT0803.cpp
 //  AUTHOR: Rob Tillaart
-// VERSION: 0.2.0
+// VERSION: 0.2.1
 // PURPOSE: Arduino Library for KT0803 and KT0803K FM transmitter.
 //     URL: https://github.com/RobTillaart/KT0803
 
@@ -12,7 +12,7 @@
 //  REGISTERS on page 7 datasheet
 
 
-KT0803::KT0803(TwoWire * wire)  
+KT0803::KT0803(TwoWire * wire)
 {
   _address  = 0x3E;
   _wire = wire;
@@ -42,7 +42,7 @@ bool KT0803::setFrequency(float MHz)
 {
   if ((MHz < 70) || (MHz > 108)) return false;
   //  steps 50 KHz
-  return setChannel(round(MHz * 20));  
+  return setChannel(round(MHz * 20));
 }
 
 
@@ -74,6 +74,7 @@ uint16_t KT0803::getChannel()
   uint16_t channel = readData(0x01) & 0x07;
   channel <<= 8;
   channel |= readData(0x00);
+  channel <<= 1;
   return channel;
 }
 
@@ -106,11 +107,11 @@ bool KT0803::setRFGain(uint8_t rfgain)
   data |= (rfgain & 0x03) << 6;
   writeData(0x01, data);
   // bit 2
-  data = readData(0x13) & 0x7F; 
+  data = readData(0x13) & 0x7F;
   data |= (rfgain & 0x04) << 5;
   writeData(0x13, data);
   // bit 3
-  data = readData(0x02) & 0xBF; 
+  data = readData(0x02) & 0xBF;
   data |= (rfgain & 0x08) << 3;
   writeData(0x02, data);
   return true;
