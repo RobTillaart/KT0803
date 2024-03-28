@@ -32,9 +32,16 @@ It is primary written to understand the possibilities and the interface of the d
 The library is not tested by me with hardware yet. See future below.
 
 There are newer, more capable, follow up devices like model K, L and M.
-From these only the KT0803K is supported since 0.2.0. 
-The L and the M version are not supported yet (first get K done).
-First investigations indicate M == K and L >> K, and thus far they seem backwards compatible.
+From these only the KT0803K is supported as a derived class.
+The L and the M versions of the device will work with the KT0803K class too
+as their functionality is equal or exceeds the K version. 
+As far as investigated the L and M versions are backwards compatible.
+
+Version 0.3.0 implements a few KT0803K specific functions, see section below.
+These will work for L and M devices too.
+
+For ATTinyX5 series there exists the TinyKT0803 class which is derived from this one.
+It uses a different I2C implementation. See - https://github.com/RobTillaart/TinyKT0803
 
 
 #### Hardware
@@ -113,6 +120,7 @@ Some examples:
 #### Related
 
 - https://github.com/RobTillaart/KT0803
+- https://github.com/RobTillaart/TinyKT0803
 - https://www.hackster.io/hesam-moshiri/stereo-digital-fm-transmitter-circuit-arduino-code-2dbd8d
 - https://www.hackster.io/hesam-moshiri/full-digital-fm-receiver-with-arduino-and-tea5767-52be37
 - https://www.hackerstore.nl/Artikel/388
@@ -263,19 +271,19 @@ A minimal hardcoded preset sketch is in the examples.
 
 ## Derived classes
 
-Since 0.2.0 the KT0803K class is created, although minimally implemented.
+A derived class KT0803K class is created, with some extended
+functions.
 
-The KT0803L might work as it seems backwards compatible. It has far more
-registers in use than the KT0803/K.
-At the moment there is no intention to implement this KT0803L version.
+The KT0803L will work as it is backwards compatible with KT0803K. 
+It has far more registers in use than the KT0803/K.
 
-The KT0803M looks almost identical to the KT0803K (no new registers), so
+The KT0803M is identical to the KT0803K (no new registers), so
 a derived class is straightforward.
 
 
 ## Interface KT0803K
 
-Added in 0.3.0 (not tested), check datasheet.
+Added functions in 0.3.0 (not tested), check datasheet.
 
 #### Mono Stereo
 
@@ -290,8 +298,8 @@ Added in 0.3.0 (not tested), check datasheet.
 
 #### Misc
 
-- **bool powerOK()**
-- **bool silenceDetected()**
+- **bool powerOK()** idem
+- **bool silenceDetected()** idem
 
 
 ## Future
@@ -305,6 +313,8 @@ Added in 0.3.0 (not tested), check datasheet.
 
 #### Should
 
+- update readme.md 
+  - KT0803K specific functions.
 - add examples for KT0803K specific functions.
 
 
@@ -317,7 +327,7 @@ Added in 0.3.0 (not tested), check datasheet.
   - call begin () again? => default
   - explain well doc.
 - derived class KT0803M  == KT0803K
-- derived class KT0803L  >> KT0803K (compatible)
+- derived class KT0803L  >= KT0803K (compatible)
 - improve error handling
 - unit tests possible?
 - extend settings upon request **bold** are interesting, see table
@@ -344,7 +354,6 @@ Added in 0.3.0 (not tested), check datasheet.
 #### Wont (for now)
 
 - investigate tea5767 FM receiver (Out of scope for this lib).
-- implement KT0803L
 - investigate efficiency of register access.
   - caching all (allowed) registers in **begin()**
     -  3 bytes for KT0803

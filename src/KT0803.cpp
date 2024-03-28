@@ -41,7 +41,7 @@ bool KT0803::isConnected()
 bool KT0803::setFrequency(float MHz)
 {
   if ((MHz < 70) || (MHz > 108)) return false;
-  //  steps 50 KHz
+  //  steps 50 KHz although KT0803 will truncate to 100 KHz.
   return setChannel(round(MHz * 20));
 }
 
@@ -326,7 +326,6 @@ bool KT0803K::silenceDetected()
   uint8_t register0F = readData(0x0F);
   return (register0F & (1 << 2)) > 0;
 }
-
 
 
 //  -- END OF FILE --

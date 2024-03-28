@@ -20,6 +20,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
   - bool silenceDetected()
 - update GitHub actions
 - update readme.md
+- update keywords.txt
 - minor edits
 
 ----
